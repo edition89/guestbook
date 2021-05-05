@@ -20,17 +20,6 @@ class HomeController extends Controller
         return view('pages.messages.index', $data);
     }
 
-    public function postajax(Request $request)
-    {
-        $guestbook = new Guestbooks;
-        $guestbook->username = $request->username;
-        $guestbook->message = $request->message;
-
-        $guestbook->save();
-
-        return response()->json(['success' => 'Form is successfully submitted!']);
-    }
-
     public function logout(Request $request)
     {
         Auth::logout();
@@ -59,5 +48,28 @@ class HomeController extends Controller
         $guestbook = Guestbooks::find($request->id);
         $guestbook->delete();
         return response()->json(['success' => 'Form is successfully submitted!']);
+    }
+
+    public function capthcaFormValidate(Request $request)
+    {
+        $validate = $request->validate([
+            'username' => 'required',
+            'message' => 'required',
+            'captcha' => 'required|captcha'
+        ],
+        ['captcha.captcha'=>'Неверный текст.']);
+
+        $guestbook = new Guestbooks;
+        $guestbook->username = $validate['username'];
+        $guestbook->message = $validate['message'];
+
+        $guestbook->save();
+
+        return redirect('/');
+    }
+
+    public function reloadCaptcha()
+    {
+        return response()->json(['captcha'=> captcha_img()]);
     }
 }

@@ -33,28 +33,14 @@
     <script src='https://www.google.com/recaptcha/api.js'></script>
     <script>
         $(function() {
-            $("#add").on('click', function(e) {
-                e.preventDefault();
-                let Data = $('form').serializeArray();
-                for (d of Data) {
-                    if ((d.name == "username" || d.name == "message" || d.name == "g-recaptcha-response") && d.value == "") {
-                        $('#error').modal('toggle');
-                        return 0;
-                    }
-                }
+            $('#reload').click(function() {
                 $.ajax({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    url: "{{url('/')}}",
-                    type: "POST",
-                    data: Data,
-                    dataType: 'json',
-                    success: function(res) {
-                        location.reload();
-                        console.log(res);
+                    type: 'GET',
+                    url: 'reload-captcha',
+                    success: function(data) {
+                        $(".captcha span").html(data.captcha);
                     }
-                })
+                });
             });
         })
 

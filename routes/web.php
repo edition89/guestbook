@@ -3,8 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-use App\Models\Guestbooks;
+use App\Http\Controllers\CaptchaValidationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,7 +16,6 @@ use App\Models\Guestbooks;
 */
 
 Route::get('/',  [HomeController::class, 'index']);
-Route::post('/',  [HomeController::class, 'postajax']);
 Route::post('/edit',  [HomeController::class, 'edit'])->name('edit');
 Route::post('/deleted',  [HomeController::class, 'deleted'])->name('deleted');
 Route::get('/logout', [HomeController::class, 'logout']);
@@ -26,3 +24,6 @@ Route::post('/login', 'Auth\AuthController@gpostLogin')->name('auth.login.get');
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::post('/', [HomeController::class, 'capthcaFormValidate'])->name('captcha-validation');
+Route::get('reload-captcha', [HomeController::class, 'reloadCaptcha']);
